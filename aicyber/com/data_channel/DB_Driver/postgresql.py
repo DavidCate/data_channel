@@ -9,8 +9,6 @@ class PostgreSQL():
         self.setPgConnection()
 
 
-    async def setPgConnection(self):
-        self.__pg_connection=await asyncpg.create_pool(
-            self.__conf
-        )
+    def setPgConnection(self):
+        pass
 

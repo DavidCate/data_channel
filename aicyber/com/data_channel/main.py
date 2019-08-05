@@ -34,8 +34,8 @@ class Main():
             for i in dir(module):
                 if i.endswith('Handler') and not i.startswith('Base'):
                     cls=getattr(module,i)
-                    cls=cls()
                     if is_handler(cls):
+                        cls = cls()
                         handlers.append(cls)
         return handlers
 
@@ -43,9 +43,9 @@ class Main():
     def execute(self,handlers:list):
         for handler in handlers:
             #处理用户的操作 对用户的操作进行配置
-            handler.onHandleMethod(self)
+            handler.onHandleMethod()
             #根据配置好的配置，执行父类查询和插入
-            handler.exec(self)
+            handler.exec()
 
 
 if __name__=='__main__':

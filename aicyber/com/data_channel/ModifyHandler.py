@@ -51,9 +51,6 @@ class ModifyHandler(object):
             return conn(self.__conf)
 
 
-
-
-
     def initConnection(self,conf):
         self.verifyDB(conf)
         connections=self.importDriver()

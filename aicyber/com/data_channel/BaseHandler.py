@@ -1,20 +1,16 @@
 from aicyber.com.data_channel.ModifyHandler import ModifyHandler
 
 
-class BaseHandler():
-    __modify=None
-    __conn=None
-    __conf=None
+class BaseHandler(ModifyHandler):
+    #
+    # def __init__(self):
+    #     super.__init__(self,ModifyHandler)
 
-    def __init__(self):
-        __modify=ModifyHandler()
-        __conn=__modify.getConnection()
-        __conf=__modify.getConf()
 
 
 
     def exec(self):
-        print(self.__conf)
+        pass
 
 
     def onHandleMethod(self):
