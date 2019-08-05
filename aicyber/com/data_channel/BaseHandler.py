@@ -2,6 +2,11 @@ from aicyber.com.data_channel.ModifyHandler import ModifyHandler
 from aicyber.com.data_channel.utils.Util import Utils
 
 class BaseHandler(ModifyHandler):
+    __insertTable=None
+    __selectTable=None
+
+    def exec(self):
+        pass
 
     def onHandleMethod(self):
         pass
