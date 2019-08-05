@@ -2,7 +2,7 @@ from aicyber.com.data_channel.utils.Util import Utils
 import importlib
 import asyncpg
 import aiomysql
-from .DB_Driver import mysql
+
 
 class ModifyHandler(object):
     __datasourceConnection=None
@@ -33,23 +33,33 @@ class ModifyHandler(object):
         connections={}
         f_type=self.__dbtypes['from']
         t_type=self.__dbtypes['to']
-        f_conn=self.generateConn(f_type)
-        t_conn=self.generateConn(t_type)
+        f_conn=self.generateFromConn(f_type)
+        t_conn=self.generateToConn(t_type)
         connections['from']=f_conn
         connections['to']=t_conn
         return connections
 
-    def generateConn(self,type):
+    def generateFromConn(self,type):
         if type == 'mysql':
             # module = importlib.import_module('..DB_Driver.mysql', './DB_Driver')
             module = importlib.import_module('.mysql', 'DB_Driver')
             conn = getattr(module, 'MySQL')
-            return conn(self.__conf)
+            return conn(self.__conf['from'])
         if type == 'postgresql':
             module = importlib.import_module('.postgresql', 'DB_Driver')
             conn = getattr(module, 'PostgreSQL')
-            return conn(self.__conf)
+            return conn(self.__conf['from'])
 
+    def generateToConn(self,type):
+        if type == 'mysql':
+            # module = importlib.import_module('..DB_Driver.mysql', './DB_Driver')
+            module = importlib.import_module('.mysql', 'DB_Driver')
+            conn = getattr(module, 'MySQL')
+            return conn(self.__conf['to'])
+        if type == 'postgresql':
+            module = importlib.import_module('.postgresql', 'DB_Driver')
+            conn = getattr(module, 'PostgreSQL')
+            return conn(self.__conf['to'])
 
     def initConnection(self,conf):
         self.verifyDB(conf)
