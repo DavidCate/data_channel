@@ -1,0 +1,39 @@
+from:
+  db_type: mysql
+  host: 39.96.71.34
+  port: 3306
+  user: aicyber
+  pwd: Aicyber201415926
+  database: cloud
+  tables:
+    - app
+    - call
+    - callback
+    - callin
+    - corp
+    - group
+    - line
+    - permission
+    - seat
+    - user
+    - verify
+
+to:
+  db_type: postgresql
+  host: aicyber007.pg.rds.aliyuncs.com
+  port: 3433
+  user: postgres
+  pwd: Z8asuidn
+  database: cloud
+  tables:
+    - cloud_app
+    - cloud_call
+    - cloud_callback
+    - cloud_callin
+    - cloud_corp
+    - cloud_group
+    - cloud_line
+    - cloud_permission
+    - cloud_seat
+    - cloud_user
+    - cloud_verify
