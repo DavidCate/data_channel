@@ -1,12 +1,21 @@
 from aicyber.com.data_channel.ModifyHandler import ModifyHandler
-from aicyber.com.data_channel.utils.Util import Utils
 
-class BaseHandler(ModifyHandler):
-    __insertTable=None
-    __selectTable=None
+
+class BaseHandler():
+    __modify=None
+    __conn=None
+    __conf=None
+
+    def __init__(self):
+        __modify=ModifyHandler()
+        __conn=__modify.getConnection()
+        __conf=__modify.getConf()
+
+
 
     def exec(self):
-        pass
+        print(self.__conf)
+
 
     def onHandleMethod(self):
         pass
