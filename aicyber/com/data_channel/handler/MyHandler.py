@@ -3,11 +3,11 @@ from aicyber.com.data_channel.Tasks import Tasks
 from aicyber.com.data_channel.Task import Task
 
 class MyHandler(BaseHandler):
-    def onHandleMethod(self):
+    async def onHandleMethod(self):
         task=Task()
         task.setInsertFields(['','',''])
         task.setInsertTable('cloud_call')
         task.setSelectTable('')
         task.setSelectFields(['','',''])
         self.tasks.addTask(task)
-        self.execTasks()
+        await self.execTasks(self.tasks)

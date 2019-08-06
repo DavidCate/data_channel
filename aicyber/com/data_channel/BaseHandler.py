@@ -8,10 +8,10 @@ from typing import TypeVar, Generic
 class BaseHandler(ModifyHandler):
     tasks = Tasks()
 
-    def execTasks(self, tasks: Tasks):
+    async def execTasks(self, tasks: Tasks):
         tasks = tasks.getTasks()
         for task in tasks:
-            self.execTask(task)
+            await self.execTask(task)
 
     async def execTask(self, task: Task):
         select_sql = self.generate_selectsql_by_task(task)
@@ -103,7 +103,7 @@ class BaseHandler(ModifyHandler):
             fiels_concat+='`'+fiel+'`'+','
         fiels_concat=fiels_concat[:len(fiels_concat)-1]
         sql='select {fiels} from {table}'
-        sql.format(fiels_concat,table)
+        sql=sql.format(fiels=fiels_concat,table=table)
         print(sql)
         return sql
 

@@ -4,12 +4,12 @@ import importlib
 import asyncio
 
 class Main():
-    def flow(self):
+    async def flow(self):
        #加载用户handler
         handlers=self.loadUserHandler()
         #执行onhandle
         try:
-            self.execute(handlers=handlers)
+            await self.execute(handlers=handlers)
         except Exception as e:
             print(e)
 
@@ -41,10 +41,10 @@ class Main():
         return handlers
 
 
-    def execute(self,handlers:list):
+    async def execute(self,handlers:list):
         for handler in handlers:
             #处理用户的操作 对用户的操作进行配置
-            handler.onHandleMethod()
+            await handler.onHandleMethod()
             #根据配置好的配置，执行父类查询和插入
             handler.exec()
             ##########
