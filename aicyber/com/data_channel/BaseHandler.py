@@ -1,16 +1,19 @@
 from aicyber.com.data_channel.ModifyHandler import ModifyHandler
-
+from aicyber.com.data_channel.Tasks import Tasks
+from aicyber.com.data_channel.Task import Task
+from typing import TypeVar,Generic
 
 class BaseHandler(ModifyHandler):
-    __selectTable=None
-    __insertTable=None
-    __selectFields=None
-    __InsertFields=None
+    tasks=Tasks()
 
+    def execTasks(self,tasks:Tasks):
+        tasks=tasks.getTasks()
+        for task in tasks:
+            self.execTask(task)
 
+    def execTask(self,task:Task):
+        sqls=self.generate_sqls_by_task(task)
 
-    def exec(self):
-        pass
 
 
     def onHandleMethod(self):
@@ -22,14 +25,3 @@ class BaseHandler(ModifyHandler):
     def insert(self,sql):
         pass
 
-    def setInsertTable(self,table):
-        pass
-
-    def setInsertFields(self,fields:list):
-        pass
-
-    def setSelectFields(self,fields:list):
-        pass
-
-    def setSelectTable(self,table):
-        pass

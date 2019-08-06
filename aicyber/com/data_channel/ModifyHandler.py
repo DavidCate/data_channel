@@ -11,7 +11,7 @@ class ModifyHandler(object):
     def __init__(self):
         util=Utils()
         self.__conf=util.getConf()
-        self.initConnection(self.__conf)
+        self.__initConnection(self.__conf)
 
     def getDataSourceTables(self):
         pass
@@ -59,7 +59,7 @@ class ModifyHandler(object):
             pool = getattr(module, 'PostgreSQL')
             return pool(self.__conf['to'])
 
-    def initConnection(self,conf):
+    def __initConnection(self,conf):
         self.verifyDB(conf)
         pools=self.getPools()
         self.__datasourceConnectionPool=pools['from']
