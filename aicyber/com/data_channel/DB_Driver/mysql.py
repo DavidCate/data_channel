@@ -18,3 +18,4 @@ class MySQL():
             loop=loop
         )
         return mysql_poll
+
