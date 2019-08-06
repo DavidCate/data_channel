@@ -2,10 +2,10 @@ from aicyber.com.data_channel.ModifyHandler import ModifyHandler
 
 
 class BaseHandler(ModifyHandler):
-    #
-    # def __init__(self):
-    #     super.__init__(self,ModifyHandler)
-
+    __selectTable=None
+    __insertTable=None
+    __selectFields=None
+    __InsertFields=None
 
 
 
@@ -16,7 +16,7 @@ class BaseHandler(ModifyHandler):
     def onHandleMethod(self):
         pass
 
-    def select(self,sql):
+    async def select(self,sql):
         pass
 
     def insert(self,sql):

@@ -1,12 +1,10 @@
 from aicyber.com.data_channel.utils.Util import Utils
 import importlib
-import asyncpg
-import aiomysql
 
 
 class ModifyHandler(object):
-    __datasourceConnection=None
-    __targetdatasourceConnection=None
+    __datasourceConnectionPool=None
+    __targetdatasourceConnectionPool=None
     __dbtypes={}
     __conf=None
 
@@ -29,15 +27,15 @@ class ModifyHandler(object):
         if t_dbtype=='postgresql':
             self.__dbtypes['to']='postgresql'
 
-    def importDriver(self):
-        connections={}
+    def getPools(self):
+        pools={}
         f_type=self.__dbtypes['from']
         t_type=self.__dbtypes['to']
-        f_conn=self.generateFromConn(f_type)
-        t_conn=self.generateToConn(t_type)
-        connections['from']=f_conn
-        connections['to']=t_conn
-        return connections
+        f_pool=self.generateFromConn(f_type)
+        t_pool=self.generateToConn(t_type)
+        pools['from']=f_pool
+        pools['to']=t_pool
+        return pools
 
     def generateFromConn(self,type):
         if type == 'mysql':
@@ -47,8 +45,8 @@ class ModifyHandler(object):
             return conn(self.__conf['from'])
         if type == 'postgresql':
             module = importlib.import_module('.postgresql', 'DB_Driver')
-            conn = getattr(module, 'PostgreSQL')
-            return conn(self.__conf['from'])
+            pool = getattr(module, 'PostgreSQL')
+            return pool(self.__conf['from'])
 
     def generateToConn(self,type):
         if type == 'mysql':
@@ -58,20 +56,26 @@ class ModifyHandler(object):
             return conn(self.__conf['to'])
         if type == 'postgresql':
             module = importlib.import_module('.postgresql', 'DB_Driver')
-            conn = getattr(module, 'PostgreSQL')
-            return conn(self.__conf['to'])
+            pool = getattr(module, 'PostgreSQL')
+            return pool(self.__conf['to'])
 
     def initConnection(self,conf):
         self.verifyDB(conf)
-        connections=self.importDriver()
-        self.__datasourceConnection=connections['from']
-        self.__targetdatasourceConnection=connections['to']
+        pools=self.getPools()
+        self.__datasourceConnectionPool=pools['from']
+        self.__targetdatasourceConnectionPool=pools['to']
 
-    def getConnection(self):
+    def getPools(self):
         dic={}
-        dic['from_conn']=self.__datasourceConnection
-        dic['to_conn']=self.__targetdatasourceConnection
+        dic['from_pool']=self.__datasourceConnection
+        dic['to_pool']=self.__targetdatasourceConnection
         return dic
+
+    def getFromPool(self):
+        return self.__datasourceConnectionPool
+
+    def getToPool(self):
+        return self.__targetdatasourceConnectionPool
 
     def getConf(self):
         return self.__conf

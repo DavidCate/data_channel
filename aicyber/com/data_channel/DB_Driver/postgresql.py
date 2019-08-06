@@ -2,15 +2,12 @@ import asyncpg
 
 class PostgreSQL():
     __conf=None
-    __pg_connection=None
 
     def __init__(self,conf):
         self.__conf=conf
-        self.setPgConnection()
 
-
-    def setPgConnection(self):
-        self.__pg_connection=asyncpg.create_pool(
+    async def getPgConnection(self):
+        pg_poll=await asyncpg.create_pool(
             host=self.__conf.get('host'),
             port=self.__conf.get('port'),
             user=self.__conf.get('user'),
@@ -18,4 +15,5 @@ class PostgreSQL():
             database=self.__conf.get('database'),
             max_size=100
         )
+        return pg_poll
 

@@ -1,6 +1,7 @@
 from aicyber.com.data_channel.BaseHandler import BaseHandler
 import os
 import importlib
+import asyncio
 
 class Main():
     def flow(self):
@@ -49,5 +50,6 @@ class Main():
 
 
 if __name__=='__main__':
-    main=Main()
-    main.flow()
+    event_loop=asyncio.get_event_loop()
+    event_loop.create_task(Main().flow())
+    event_loop.run_forever()
