@@ -47,6 +47,7 @@ class Main():
             handler.onHandleMethod()
             #根据配置好的配置，执行父类查询和插入
             handler.exec()
+            ##########
 
 
 if __name__=='__main__':
