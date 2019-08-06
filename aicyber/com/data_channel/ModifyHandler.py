@@ -27,7 +27,7 @@ class ModifyHandler(object):
         if t_dbtype=='postgresql':
             self.__dbtypes['to']='postgresql'
 
-    def getPools(self):
+    def __getPools(self):
         pools={}
         f_type=self.__dbtypes['from']
         t_type=self.__dbtypes['to']
@@ -53,15 +53,15 @@ class ModifyHandler(object):
             # module = importlib.import_module('..DB_Driver.mysql', './DB_Driver')
             module = importlib.import_module('.mysql', 'DB_Driver')
             conn = getattr(module, 'MySQL')
-            return conn(self.__conf['to'])
+            return conn(self.__conf['to']).getMySQLConnection()
         if type == 'postgresql':
             module = importlib.import_module('.postgresql', 'DB_Driver')
             pool = getattr(module, 'PostgreSQL')
-            return pool(self.__conf['to'])
+            return pool(self.__conf['to']).getPgConnection()
 
     def __initConnection(self,conf):
         self.__verifyDB(conf)
-        pools=self.getPools()
+        pools=self.__getPools()
         self.__datasourceConnectionPool=pools['from']
         self.__targetdatasourceConnectionPool=pools['to']
 
