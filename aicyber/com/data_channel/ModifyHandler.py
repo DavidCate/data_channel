@@ -19,7 +19,7 @@ class ModifyHandler(object):
     def getTargetDataSourceTables(self):
         pass
 
-    def verifyDB(self,conf):
+    def __verifyDB(self,conf):
         f_dbtype=conf['from'].get('db_type')
         t_dbtype=conf['to'].get('db_type')
         if f_dbtype=='mysql':
@@ -60,7 +60,7 @@ class ModifyHandler(object):
             return pool(self.__conf['to'])
 
     def __initConnection(self,conf):
-        self.verifyDB(conf)
+        self.__verifyDB(conf)
         pools=self.getPools()
         self.__datasourceConnectionPool=pools['from']
         self.__targetdatasourceConnectionPool=pools['to']

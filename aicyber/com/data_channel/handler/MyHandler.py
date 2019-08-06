@@ -10,4 +10,4 @@ class MyHandler(BaseHandler):
         task.setSelectTable('')
         task.setSelectFields(['','',''])
         self.tasks.addTask(task)
-        self.exec()
+        self.execTasks()
