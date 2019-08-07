@@ -46,7 +46,6 @@ class Main():
             #处理用户的操作 对用户的操作进行配置
             await handler.onHandleMethod()
             #根据配置好的配置，执行父类查询和插入
-            handler.exec()
             ##########
 
 

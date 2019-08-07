@@ -8,10 +8,12 @@ class ModifyHandler(object):
     __dbtypes={}
     __conf=None
 
-    def __init__(self,):
+    def __init__(self):
         util=Utils()
         self.__conf=util.getConf()
-        self.__initConnection(self.__conf)
+
+    async def init(self):
+        await self.__initConnection(self.__conf)
 
     def getDataSourceTables(self):
         pass
@@ -37,27 +39,27 @@ class ModifyHandler(object):
         pools['to']=t_pool
         return pools
 
-    async def generateFromConn(self,type):
+    def generateFromConn(self,type):
         if type == 'mysql':
             # module = importlib.import_module('..DB_Driver.mysql', './DB_Driver')
             module = importlib.import_module('.mysql', 'DB_Driver')
             conn = getattr(module, 'MySQL')
-            return await conn(self.__conf['from']).getPgConnection()
+            return conn(self.__conf['from']).getMySQLConnection()
         if type == 'postgresql':
             module = importlib.import_module('.postgresql', 'DB_Driver')
             pool = getattr(module, 'PostgreSQL')
-            return await pool(self.__conf['from']).getPgConnection()
+            return pool(self.__conf['from']).getPgConnection()
 
-    async def generateToConn(self,type):
+    def generateToConn(self,type):
         if type == 'mysql':
             # module = importlib.import_module('..DB_Driver.mysql', './DB_Driver')
             module = importlib.import_module('.mysql', 'DB_Driver')
             conn = getattr(module, 'MySQL')
-            return await conn(self.__conf['to']).getMySQLConnection()
+            return conn(self.__conf['to']).getMySQLConnection()
         if type == 'postgresql':
             module = importlib.import_module('.postgresql', 'DB_Driver')
             pool = getattr(module, 'PostgreSQL')
-            return await pool(self.__conf['to']).getPgConnection()
+            return pool(self.__conf['to']).getPgConnection()
 
     async def __initConnection(self,conf):
         self.__verifyDB(conf)
