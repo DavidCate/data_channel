@@ -14,8 +14,7 @@ class MySQL():
             port=self.__conf.get('port'),
             user=self.__conf.get('user'),
             password=self.__conf.get('pwd'),
-            db=self.__conf.get('database'),
-            # loop=loop
+            db=self.__conf.get('database')
         )
         return mysql_poll
 

@@ -24,8 +24,10 @@ class MyHandler(BaseHandler):
             # task.setInsertFields()
             # self.tasks.addTask(task)
 
-        sql = 'select * from cloud_line'
+        # sql = 'select * from cloud_line'
+        sql='select * from line'
+        res=await self.select_from_mysql(sql)
 
-        res=await self.select(sql)
+        # res=await self.select(sql)
         print(res)
         await self.execTasks(self.tasks)

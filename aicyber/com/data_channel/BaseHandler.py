@@ -136,6 +136,14 @@ class BaseHandler(ModifyHandler):
             res= [dict(r) for r in res]
             return res
 
+    async def select_from_mysql(self,sql):
+        await self.init()
+        from_pool=self.getFromPool()
+        async with from_pool.acquire() as conn:
+            async with conn.cursor() as connection:
+                await connection.execute(sql)
+                r=await connection.fetchall()
+        return r
 
     def insert(self, sql):
         pass
