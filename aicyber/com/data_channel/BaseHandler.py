@@ -9,6 +9,7 @@ class BaseHandler(ModifyHandler):
     tasks = Tasks()
 
     async def execTasks(self, tasks: Tasks):
+        await self.init()
         tasks = tasks.getTasks()
         for task in tasks:
             await self.execTask(task)
