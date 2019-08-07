@@ -52,5 +52,4 @@ class Main():
 
 if __name__=='__main__':
     event_loop=asyncio.get_event_loop()
-    event_loop.create_task(Main().flow())
-    event_loop.run_forever()
+    event_loop.run_until_complete(Main().flow())
