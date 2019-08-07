@@ -1,8 +1,6 @@
 from aicyber.com.data_channel.ModifyHandler import ModifyHandler
 from aicyber.com.data_channel.Tasks import Tasks
 from aicyber.com.data_channel.Task import Task
-from aicyber.com.data_channel.Sqls import Sqls
-from typing import TypeVar, Generic
 
 
 class BaseHandler(ModifyHandler):
@@ -77,10 +75,10 @@ class BaseHandler(ModifyHandler):
         pass
 
     async def exec_postgresql_query(self,sql):
-        async with self.getFromPool().acquire() as conn:
-            res = await conn.fetch(sql)
+        with self.getFromPool().acquire() as conn:
+            res = conn.fetch(sql)
             res = [dict(r) for r in res]
-        return res
+        return await res
 
 
     async def exec_oracle_query(self,sql):
