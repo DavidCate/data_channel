@@ -127,7 +127,13 @@ class BaseHandler(ModifyHandler):
         pass
 
     async def select(self, sql):
-        pass
+        await self.init()
+        to_pool=self.getToPool()
+        async with to_pool.acquire() as conn:
+            res = await conn.fetch(sql)
+            res= [dict(r) for r in res]
+            return res
+
 
     def insert(self, sql):
         pass
