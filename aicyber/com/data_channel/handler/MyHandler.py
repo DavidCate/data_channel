@@ -11,9 +11,6 @@ class MyHandler(BaseHandler):
         from_tables=from_conf.get('tables')
         to_tables=to_conf.get('tables')
 
-        xx=dict({"cloud_app":['id','addtime']})
-        for key in xx.keys():
-            value=xx.get(key)
 
         for index in from_tables:
             for key in index.keys():
@@ -26,8 +23,8 @@ class MyHandler(BaseHandler):
 
         # sql = 'select * from cloud_line'
         sql='select * from line'
-        res=await self.select_from_mysql(sql)
+        # res=await self.select_from_mysql(sql)
 
         # res=await self.select(sql)
-        print(res)
+        # print(res)
         await self.execTasks(self.tasks)

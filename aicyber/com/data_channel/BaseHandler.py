@@ -32,6 +32,10 @@ class BaseHandler(ModifyHandler):
         pass
 
     async def exec_postgresql_insert(self,sql):
+        with self.getToPool().acquire() as conn:
+            res = conn.fetch(sql)
+            res = [dict(r) for r in res]
+        return await res
         pass
 
     async def exec_oracle_insert(self,sql):
@@ -51,7 +55,10 @@ class BaseHandler(ModifyHandler):
         return sql
 
     def generate_mysql_insertsql(self,table:str,fields:list,res):
+        # for index in res:
+        #     sql='insert into {tableName}({fields}) values {values}'
         pass
+
 
     def generate_postgresql_insertsql(self, table: str, fields: list, res):
         pass
@@ -72,7 +79,12 @@ class BaseHandler(ModifyHandler):
 
 
     async def exec_mysql_query(self,sql):
-        pass
+        from_pool = self.getFromPool()
+        async with from_pool.acquire() as conn:
+            async with conn.cursor() as connection:
+                await connection.execute(sql)
+                r = await connection.fetchall()
+        return r
 
     async def exec_postgresql_query(self,sql):
         with self.getFromPool().acquire() as conn:
