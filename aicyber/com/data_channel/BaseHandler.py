@@ -133,3 +133,6 @@ class BaseHandler(ModifyHandler):
 
     def insert(self, sql):
         pass
+
+    def getTableFields(self,tableName:str):
+        pass
