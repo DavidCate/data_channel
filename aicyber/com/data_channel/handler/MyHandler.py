@@ -19,9 +19,13 @@ class MyHandler(BaseHandler):
             for key in index.keys():
                 value=index.get(key)
             task.setSelectTable(index)
-            task.setSelectFields()
-            task.setInsertTable(to_tables.pop(index=0))
-            task.setInsertFields()
-            self.tasks.addTask(task)
+            # task.setSelectFields()
+            # task.setInsertTable(to_tables.pop(index=0))
+            # task.setInsertFields()
+            # self.tasks.addTask(task)
 
+        sql = 'select * from cloud_line'
+
+        res=await self.select(sql)
+        print(res)
         await self.execTasks(self.tasks)
