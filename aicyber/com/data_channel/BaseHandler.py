@@ -2,11 +2,16 @@ from aicyber.com.data_channel.ModifyHandler import ModifyHandler
 from aicyber.com.data_channel.Tasks import Tasks
 from aicyber.com.data_channel.Task import Task
 
+from datetime import datetime
 
 class BaseHandler(ModifyHandler):
-    tasks = Tasks()
+    tasks=Tasks()
+    # def __init__(self):
+    #     super(BaseHandler,self).__init__()
+    #     self.tasks=Tasks()
 
-    async def execTasks(self, tasks: Tasks):
+    async def execTasks(self, tasks: list):
+        print('开始执行任务。。')
         await self.init()
         tasks = tasks.getTasks()
         for task in tasks:
@@ -31,12 +36,17 @@ class BaseHandler(ModifyHandler):
     async def exec_mysql_insert(self,sql):
         pass
 
-    async def exec_postgresql_insert(self,sql):
-        with self.getToPool().acquire() as conn:
-            res = conn.fetch(sql)
-            res = [dict(r) for r in res]
-        return await res
-        pass
+    async def exec_postgresql_insert(self,sqls):
+        res_list=[]
+        if len(sqls)==0:
+            return
+        async with self.getToPool().acquire() as conn:
+            for sql in sqls:
+                print('exec sql ------->'+sql)
+                res = await conn.fetch(sql)
+                res = [dict(r) for r in res]
+                res_list.append(res)
+        return res_list
 
     async def exec_oracle_insert(self,sql):
         pass
@@ -61,7 +71,33 @@ class BaseHandler(ModifyHandler):
 
 
     def generate_postgresql_insertsql(self, table: str, fields: list, res):
-        pass
+        sqls=[]
+        not_insert_fields=[]
+        fields_concat=''
+        #遍历结果集 查找空数据以及类型转换
+        for r in res:
+            values=''
+            for index in range(len(r)):
+                cell=r[index]
+                if isinstance(cell,datetime):
+                    cell=cell.strftime('%Y-%m-%d %H:%M:%S')
+                if cell is None:
+                    not_insert_fields.append(index)
+                    continue
+                values+='\''+cell+'\''+','
+            values=values[:len(values)-1]
+            #遍历字段集 去除value为空的字段
+            for index in range(len(fields)):
+                if index not in not_insert_fields:
+                    field = fields[index]
+                    fields_concat = fields_concat + '"' + field + '"' + ','
+            fields_concat = fields_concat[:len(fields_concat) - 1]
+
+            sql = 'insert into {table}({fields}) values ({values})'.format(table=table,fields=fields_concat,values=values)
+            sqls.append(sql)
+        return sqls
+
+
 
     def generate_oracle_insertsql(self,table:str,fields:list,res):
         pass
@@ -160,3 +196,27 @@ class BaseHandler(ModifyHandler):
 
     def getTableFields(self,tableName:str):
         pass
+
+    async def default_onHandlerMethod(self):
+        from_conf = self.getConf()['from']
+        to_conf = self.getConf()['to']
+
+        from_tables = from_conf.get('tables')
+        to_tables = to_conf.get('tables')
+
+        for index in from_tables:
+            task = Task()
+            for key in index.keys():
+                value = index.get(key)
+            # value为字段数组
+            task.setSelectTable(key)
+            task.setSelectFields(value)
+            to_index = to_tables.pop(0)
+            to_table_name = list(to_index.keys()).pop()
+            task.setInsertTable(to_table_name)
+            task.setInsertFields(to_index.get(to_table_name))
+            self.tasks.addTask(task)
+        print('任务指派完成。')
+
+
+
