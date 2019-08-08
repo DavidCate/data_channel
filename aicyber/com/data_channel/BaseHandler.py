@@ -73,6 +73,7 @@ class BaseHandler(ModifyHandler):
     def generate_postgresql_insertsql(self, table: str, fields: list, res):
         sqls=[]
         not_insert_fields=[]
+        int_insert_fields=[]
         fields_concat=''
         #遍历结果集 查找空数据以及类型转换
         for r in res:
@@ -84,13 +85,19 @@ class BaseHandler(ModifyHandler):
                 if cell is None:
                     not_insert_fields.append(index)
                     continue
+                if isinstance(cell,int):
+                    int_insert_fields.append(index)
+                    cell=str(cell)
+                    values+=cell+','
+                    continue
                 values+='\''+cell+'\''+','
             values=values[:len(values)-1]
+            fields_concat=''
             #遍历字段集 去除value为空的字段
             for index in range(len(fields)):
                 if index not in not_insert_fields:
-                    field = fields[index]
-                    fields_concat = fields_concat + '"' + field + '"' + ','
+                        field = fields[index]
+                        fields_concat = fields_concat + '"' + field + '"' + ','
             fields_concat = fields_concat[:len(fields_concat) - 1]
 
             sql = 'insert into {table}({fields}) values ({values})'.format(table=table,fields=fields_concat,values=values)

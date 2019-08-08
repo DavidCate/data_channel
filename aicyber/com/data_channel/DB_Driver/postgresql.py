@@ -11,7 +11,7 @@ class PostgreSQL():
             host=self.__conf.get('host'),
             port=self.__conf.get('port'),
             user=self.__conf.get('user'),
-            password=self.__conf.get('pwd'),
+            password=str(self.__conf.get('pwd')),
             database=self.__conf.get('database'),
             max_size=100
         )
